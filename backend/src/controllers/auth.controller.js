@@ -15,13 +15,13 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (!phone || !password) {
     res.status(400);
-    throw new Error("Пожалуйста, введите номер телефона и пароль.");
+    throw new Error("Please enter a phone number and password.");
   }
 
   const userExists = await User.findOne({ phone });
   if (userExists) {
     res.status(400);
-    throw new Error("Пользователь с этим номером уже существует.");
+    throw new Error("A user with this number already exists.");
   }
 
   const userData = { phone, password, role, email };
@@ -29,9 +29,7 @@ const registerUser = asyncHandler(async (req, res) => {
   if (role === "owner") {
     if (!llcName || typeof llcName !== "string" || llcName.trim() === "") {
       res.status(400);
-      throw new Error(
-        "Для регистрации владельца необходимо указать наименование ООО (llcName)."
-      );
+      throw new Error("Owner registration requires the LLC name (llcName).");
     }
     userData.llcName = llcName.trim();
   }
@@ -44,7 +42,7 @@ const registerUser = asyncHandler(async (req, res) => {
     ) {
       res.status(400);
       throw new Error(
-        "Для регистрации мастера требуется номер сертификата ИП (individualEntrepreneurCertificate)."
+        "Master registration requires the Individual Entrepreneur Certificate number (individualEntrepreneurCertificate)."
       );
     }
     userData.individualEntrepreneurCertificate =
@@ -59,17 +57,17 @@ const registerUser = asyncHandler(async (req, res) => {
     user.otpExpires = expires;
     await user.save();
 
-    console.log(`[OTP] Сгенерирован код ${code} для ${phone}`);
+    console.log(`[OTP] Generated code ${code} for ${phone}`);
 
     res.status(201).json({
       id: user._id,
       role: user.role,
       isVerified: user.isVerified,
-      message: `Пользователь создан. Код верификации (OTP) отправлен на номер ${phone}.`,
+      message: `User created. Verification code (OTP) sent to ${phone}.`,
     });
   } else {
     res.status(400);
-    throw new Error("Не удалось зарегистрировать пользователя");
+    throw new Error("Failed to register user");
   }
 });
 
@@ -81,9 +79,7 @@ const authUser = asyncHandler(async (req, res) => {
   if (user && (await user.matchPassword(password))) {
     if (!user.isVerified) {
       res.status(401);
-      throw new Error(
-        "Аккаунт не верифицирован. Пожалуйста, подтвердите код (OTP)."
-      );
+      throw new Error("Account not verified. Please confirm the code (OTP).");
     }
 
     const { accessToken, refreshToken } = generateAuthTokens(user._id);
@@ -97,7 +93,7 @@ const authUser = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(401);
-    throw new Error("Неверный номер телефона или пароль");
+    throw new Error("Invalid phone number or password");
   }
 });
 
@@ -106,18 +102,18 @@ const sendOTP = asyncHandler(async (req, res) => {
   const user = await User.findOne({ phone });
   if (!user || user.isVerified) {
     res.status(400);
-    throw new Error("Пользователь не найден или уже верифицирован.");
+    throw new Error("User not found or already verified.");
   }
   const { code, expires } = generateOTP();
   user.otpCode = code;
   user.otpExpires = expires;
   await user.save();
 
-  console.log(`[OTP] Сгенерирован код ${code} для пользователя ${phone}`);
+  console.log(`[OTP] Generated code ${code} for user ${phone}`);
 
   res.status(200).json({
     success: true,
-    message: `OTP успешно сгенерирован и отправлен на номер ${phone}.`,
+    message: `OTP successfully generated and sent to ${phone}.`,
     otpExpires: expires,
   });
 });
@@ -128,11 +124,11 @@ const verifyOTP = asyncHandler(async (req, res) => {
   const user = await User.findOne({ phone });
   if (user.otpCode !== otp) {
     res.status(400);
-    throw new Error("Неверный OTP.");
+    throw new Error("Invalid OTP.");
   }
   if (user.otpExpires < new Date()) {
     res.status(400);
-    throw new Error("OTP истек. Пожалуйста, запросите новый.");
+    throw new Error("OTP expired. Please request a new one.");
   }
   user.isVerified = true;
   user.otpCode = undefined;
@@ -142,7 +138,7 @@ const verifyOTP = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: "Верификация прошла успешно!",
+    message: "Verification successful!",
     accessToken,
     refreshToken,
     user: { id: user._id, role: user.role },

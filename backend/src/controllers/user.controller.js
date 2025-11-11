@@ -13,7 +13,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(404);
-    throw new Error("Пользователь не найден");
+    throw new Error("User not found");
   }
 });
 
@@ -30,11 +30,11 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
-      message: "Профиль успешно обновлен",
+      message: "Profile successfully updated",
     });
   } else {
     res.status(404);
-    throw new Error("Пользователь не найден");
+    throw new Error("User not found");
   }
 });
 

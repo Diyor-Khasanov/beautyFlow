@@ -5,7 +5,7 @@ const initializePlans = asyncHandler(async (req, res) => {
   const existingPlans = await SubscriptionPlan.countDocuments();
   if (existingPlans > 0) {
     return res.status(200).json({
-      message: "Планы уже инициализированы.",
+      message: "Plans are already initialized.", 
       plans: await SubscriptionPlan.find({}).sort({ priority: 1 }),
     });
   }
@@ -16,7 +16,7 @@ const initializePlans = asyncHandler(async (req, res) => {
       priceUZS: 0,
       clientLimit: 50,
       employeeLimit: 1,
-      features: ["Базовое расписание", "50 клиентов"],
+      features: ["Basic scheduling", "50 clients"], 
       priority: 1,
     },
     {
@@ -25,9 +25,9 @@ const initializePlans = asyncHandler(async (req, res) => {
       clientLimit: 99999,
       employeeLimit: 99999,
       features: [
-        "Неограниченное бронирование",
-        "Неограниченные клиенты",
-        "До 5 мастеров",
+        "Unlimited booking",
+        "Unlimited clients",
+        "Up to 5 employees", 
       ],
       priority: 2,
     },
@@ -37,10 +37,10 @@ const initializePlans = asyncHandler(async (req, res) => {
       clientLimit: 99999,
       employeeLimit: 99999,
       features: [
-        "Все возможности Basic",
-        "Аналитика",
+        "All Basic features",
+        "Analytics",
         "CRM",
-        "Массовые сообщения",
+        "Mass messaging",
       ],
       priority: 3,
     },
@@ -50,7 +50,7 @@ const initializePlans = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     success: true,
-    message: "Планы подписки успешно инициализированы.",
+    message: "Subscription plans successfully initialized.",
     plans: result,
   });
 });

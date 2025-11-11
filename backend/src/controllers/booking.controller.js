@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Booking = require("../models/Booking.model");
-const { checkMasterAvailability } = require("../utils/availability"); 
+const { checkMasterAvailability } = require("../utils/availability");
+
 const createBooking = asyncHandler(async (req, res) => {
   const {
     masterId,
@@ -22,7 +23,7 @@ const createBooking = asyncHandler(async (req, res) => {
 
   if (!isAvailable) {
     res.status(400);
-    throw new Error("Мастер занят или недоступен в это время.");
+    throw new Error("Master is busy or unavailable at this time.");
   }
 
   const booking = await Booking.create({
@@ -38,7 +39,7 @@ const createBooking = asyncHandler(async (req, res) => {
   });
 
   res.status(201).json({
-    message: "Бронирование успешно создано",
+    message: "Booking successfully created",
     booking,
   });
 });
@@ -60,13 +61,13 @@ const updateBookingStatus = asyncHandler(async (req, res) => {
   const booking = await Booking.findById(bookingId);
   if (!booking) {
     res.status(404);
-    throw new Error("Бронирование не найдено");
+    throw new Error("Booking not found");
   }
 
   booking.status = status;
   await booking.save();
 
-  res.json({ message: "Статус обновлен", booking });
+  res.json({ message: "Status updated", booking });
 });
 
 module.exports = {

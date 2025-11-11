@@ -5,13 +5,12 @@ const SubscriptionPlan = require("../models/SubscriptionPlan.model");
 const User = require("../models/User.model");
 
 const activateSubscription = async (userId, planName, durationDays = 30) => {
-
   const user = await User.findById(userId);
   const plan = await SubscriptionPlan.findOne({ name: planName });
 
   if (!user || !plan) {
     console.error(
-      `Ошибка активации: Пользователь ${userId} или план ${planName} не найден.`
+      `Activation Error: User ${userId} or plan ${planName} not found.`
     );
     return;
   }
@@ -25,7 +24,7 @@ const activateSubscription = async (userId, planName, durationDays = 30) => {
   await user.save();
 
   console.log(
-    `[SUBSCRIPTION] Пользователь ${userId} активировал план ${planName} до ${expiryDate.toLocaleDateString()}`
+    `[SUBSCRIPTION] User ${userId} activated plan ${planName} until ${expiryDate.toLocaleDateString()}`
   );
 };
 
@@ -45,14 +44,13 @@ const handlePaymeWebhook = asyncHandler(async (req, res) => {
 
   const { method, params } = req.body;
 
-  console.log(`[PAYME WEBHOOK] Получен метод: ${method}`);
+  console.log(`[PAYME WEBHOOK] Received method: ${method}`);
   switch (method) {
     case "CheckPerformTransaction":
       const { account, amount } = params;
       return res.json({ result: { allow: true } });
 
     case "CreateTransaction":
-      
       return res.json({
         result: {
           create_time: Date.now(),
@@ -105,7 +103,7 @@ const handleClickWebhook = asyncHandler(async (req, res) => {
 
   if (!verifyClickSign(req.body, process.env.CLICK_SECRET_KEY)) {
     console.log(
-      `[CLICK WEBHOOK] Ошибка подписи для транзакции ${merchant_trans_id}`
+      `[CLICK WEBHOOK] Signature check failed for transaction ${merchant_trans_id}`
     );
     return res.json({
       click_response: -1,
@@ -143,7 +141,7 @@ const initiatePayment = asyncHandler(async (req, res) => {
   const plan = await SubscriptionPlan.findOne({ name: planName });
   if (!plan) {
     res.status(404);
-    throw new Error("План подписки не найден.");
+    throw new Error("Subscription plan not found.");
   }
 
   const finalPrice = plan.priceUZS * durationMonths;
@@ -156,7 +154,7 @@ const initiatePayment = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: "Используйте ссылки для оплаты",
+    message: "Use the links for payment",
     finalPrice,
     paymeLink,
     clickRedirectUrl,

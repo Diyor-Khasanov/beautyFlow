@@ -15,22 +15,20 @@ const protect = asyncHandler(async (req, res, next) => {
       req.user = await User.findById(decoded.id).select("-password");
       if (!req.user || !req.user.isVerified) {
         res.status(401);
-        throw new Error(
-          "Не авторизован, пользователь не найден или не верифицирован"
-        );
+        throw new Error("Not authorized, user not found or not verified");
       }
 
       next();
     } catch (error) {
       console.error(error);
       res.status(401);
-      throw new Error("Не авторизован, неверный или просроченный токен");
+      throw new Error("Not authorized, invalid or expired token");
     }
   }
 
   if (!token) {
     res.status(401);
-    throw new Error("Не авторизован, токен отсутствует");
+    throw new Error("Not authorized, token missing");
   }
 });
 
@@ -44,9 +42,9 @@ const authorize = (roles = []) => {
       res.status(403);
       return next(
         new Error(
-          `Доступ запрещен. Роль '${
-            req.user ? req.user.role : "Неизвестная"
-          }' не имеет разрешения.`
+          `Access forbidden. Role '${
+            req.user ? req.user.role : "Unknown"
+          }' does not have permission.`
         )
       );
     }

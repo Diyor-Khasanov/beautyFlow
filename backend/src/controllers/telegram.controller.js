@@ -11,15 +11,13 @@ bot.start(async (ctx) => {
     const telegramId = ctx.message.from.id;
     const messageText = ctx.message.text;
 
-    // Maxsus /start buyrug'idan userId ni ajratib olish: /start [USER_ID]
     const parts = messageText.split(" ");
     const userId = parts.length > 1 ? parts[1] : null;
 
-    // 1. Agar foydalanuvchi allaqachon Telegramga bog'langan bo'lsa
     const existingUser = await User.findOne({ telegramId });
     if (existingUser) {
       return ctx.reply(
-        `👋 Siz allaqachon ${existingUser.phone} akkauntiga bog'langansiz.`
+        `👋 You are already linked to the account: ${existingUser.phone}.`
       );
     }
 
@@ -27,21 +25,21 @@ bot.start(async (ctx) => {
       const user = await User.findById(userId);
 
       if (!user) {
-        return ctx.reply("❌ Xatolik: Tizimda bunday foydalanuvchi topilmadi.");
+        return ctx.reply("❌ Error: User not found in the system.");
       }
       user.telegramId = telegramId;
       await user.save();
       return ctx.reply(
-        `✅ Tabriklaymiz! Sizning ${user.phone} akkauntingiz Telegramga muvaffaqiyatli bog'landi.`
+        `✅ Congratulations! Your account ${user.phone} has been successfully linked to Telegram.`
       );
     }
     return ctx.reply(
-      "👋 Xush kelibsiz! Iltimos, ilovaga kirganingizdan so'ng, akkauntni bog'lash uchun maxsus havoladan foydalaning."
+      "👋 Welcome! Please use the special link from the application to link your account after logging in."
     );
   } catch (error) {
-    console.error("TELEGRAM BOT START XATOSI:", error);
+    console.error("TELEGRAM BOT START ERROR:", error);
     return ctx.reply(
-      "❌ Kechirasiz, texnik xatolik yuz berdi. Iltimos, keyinroq urinib ko'ring."
+      "❌ Sorry, a technical error occurred. Please try again later."
     );
   }
 });
@@ -53,20 +51,20 @@ bot.command("getlink", async (ctx) => {
   const linkUrl = `${CLIENT_URL}/link-telegram?tid=${telegramId}&token=${token}`;
 
   const message = `
-        🔗 **Ваша временная ссылка для привязки:**
-        ${linkUrl}
-        
-        Срок действия: ${new Date(expires).toLocaleTimeString()}
-        
-        *Эту ссылку нужно открыть в браузере, где вы авторизованы в приложении.*
-    `;
+        🔗 **Your temporary linking reference:**
+        ${linkUrl}
+        
+        Expiration time: ${new Date(expires).toLocaleTimeString()}
+        
+        *You must open this link in the browser where you are logged into the application.*
+    `;
 
   ctx.reply(message, { parse_mode: "Markdown" });
 });
 
 bot.on("text", (ctx) => {
   if (ctx.message.text.toLowerCase() === "расписание") {
-    return ctx.reply("Для просмотра расписания используйте команду /schedule.");
+    return ctx.reply("Please use the /schedule command to view the timetable.");
   }
 });
 
@@ -75,11 +73,13 @@ const generateLink = asyncHandler(async (req, res) => {
 
   if (!user) {
     res.status(404);
-    throw new Error("Пользователь не найден.");
+    throw new Error("User not found.");
   }
 
   if (user.telegramId) {
-    return res.status(400).json({ message: "Аккаунт Telegram уже привязан." });
+    return res
+      .status(400)
+      .json({ message: "Telegram account is already linked." });
   }
 
   const { token, expires } = generateLinkToken();
@@ -90,7 +90,7 @@ const generateLink = asyncHandler(async (req, res) => {
 
   res.json({
     message:
-      "Ссылка сгенерирована. Перейдите в Telegram и нажмите кнопку Start.",
+      "Link generated. Please go to Telegram and press the Start button.",
     linkUrl: linkUrl,
   });
 });
@@ -110,7 +110,7 @@ module.exports = {
         });
       }
     } catch (error) {
-      console.error("Ошибка отправки уведомления в Telegram:", error.message);
+      console.error("Error sending Telegram notification:", error.message);
     }
   },
 };

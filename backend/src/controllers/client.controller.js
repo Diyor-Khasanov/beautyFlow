@@ -6,7 +6,7 @@ const Salon = require("../models/Salon.model");
 const checkSalonOwnership = async (salonId, userId) => {
   const salon = await Salon.findById(salonId);
   if (!salon || !salon.owner.equals(userId)) {
-    throw new Error("У вас нет прав доступа к этому салону.");
+    throw new Error("You do not have access rights to this salon.");
   }
   return salon;
 };
@@ -22,18 +22,18 @@ const createClient = asyncHandler(async (req, res) => {
     const masterUser = await User.findById(userId);
     if (masterUser.salon.toString() !== salonId) {
       res.status(403);
-      throw new Error("Мастер может добавлять клиентов только в свой салон.");
+      throw new Error("A Master can only add clients to their own salon.");
     }
   } else if (role !== "admin") {
     res.status(403);
-    throw new Error("Недостаточно прав.");
+    throw new Error("Insufficient permissions.");
   }
 
   const existingClient = await Client.findOne({ salon: salonId, phone });
   if (existingClient) {
     res.status(400);
     throw new Error(
-      "Клиент с таким телефоном уже зарегистрирован в вашем салоне."
+      "A client with this phone number is already registered in your salon."
     );
   }
 
@@ -51,7 +51,7 @@ const createClient = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     success: true,
-    message: "Клиент успешно добавлен.",
+    message: "Client successfully added.",
     client,
   });
 });
@@ -64,7 +64,7 @@ const getClients = asyncHandler(async (req, res) => {
 
   if (role !== "admin" && userSalon.salon.toString() !== salonId) {
     res.status(403);
-    throw new Error("Доступ запрещен. Вы не принадлежите этому салону.");
+    throw new Error("Access denied. You do not belong to this salon.");
   }
 
   const clients = await Client.find({ salon: salonId })
@@ -86,7 +86,7 @@ const updateClient = asyncHandler(async (req, res) => {
 
   if (!client) {
     res.status(404);
-    throw new Error("Клиент не найден.");
+    throw new Error("Client not found.");
   }
 
   const userSalon = await User.findById(req.user._id).select("salon");
@@ -96,7 +96,7 @@ const updateClient = asyncHandler(async (req, res) => {
     userSalon.salon.toString() !== client.salon.toString()
   ) {
     res.status(403);
-    throw new Error("Вы не можете редактировать клиентов из другого салона.");
+    throw new Error("You cannot edit clients from another salon.");
   }
 
   client.name = name || client.name;
@@ -108,7 +108,7 @@ const updateClient = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: "Информация о клиенте обновлена.",
+    message: "Client information updated.",
     client: updatedClient,
   });
 });
@@ -120,17 +120,17 @@ const deleteClient = asyncHandler(async (req, res) => {
 
   if (!client) {
     res.status(404);
-    throw new Error("Клиент не найден.");
+    throw new Error("Client not found.");
   }
   if (req.user.role === "owner") {
     const userSalon = await User.findById(req.user._id).select("salon");
     if (userSalon.salon.toString() !== client.salon.toString()) {
       res.status(403);
-      throw new Error("Вы не можете удалять клиентов из другого салона.");
+      throw new Error("You cannot delete clients from another salon.");
     }
   } else if (req.user.role !== "admin") {
     res.status(403);
-    throw new Error("Недостаточно прав для удаления клиента.");
+    throw new Error("Insufficient permissions to delete client.");
   }
 
   await Client.deleteOne({ _id: clientId });
@@ -138,7 +138,7 @@ const deleteClient = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: "Клиент успешно удален.",
+    message: "Client successfully deleted.",
   });
 });
 

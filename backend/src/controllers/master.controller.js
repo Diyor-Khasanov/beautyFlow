@@ -6,7 +6,7 @@ const User = require("../models/User.model");
 const checkMasterAccess = async (masterId, userId, role) => {
   const master = await User.findById(masterId);
   if (!master || !master.salon) {
-    throw new Error("Мастер не найден или не привязан к салону");
+    throw new Error("Master not found or not linked to a salon");
   }
 
   if (role === "admin") return true;
@@ -19,7 +19,7 @@ const checkMasterAccess = async (masterId, userId, role) => {
     !userSalon ||
     !userSalon.masters.map((m) => m.toString()).includes(masterId.toString())
   ) {
-    throw new Error("Нет доступа. Мастер не принадлежит вашему салону.");
+    throw new Error("Access denied. Master does not belong to your salon.");
   }
   return userSalon;
 };
@@ -31,7 +31,7 @@ const setMasterSchedule = asyncHandler(async (req, res) => {
 
   if (role === "master" && masterId.toString() !== userId.toString()) {
     res.status(403);
-    throw new Error("Мастер может устанавливать расписание только для себя.");
+    throw new Error("A Master can only set the schedule for themselves.");
   }
 
   const salon = await checkMasterAccess(masterId, userId, role).catch((err) => {
@@ -53,7 +53,7 @@ const setMasterSchedule = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: "Расписание успешно обновлено.",
+    message: "Schedule successfully updated.",
     schedule,
   });
 });
@@ -69,7 +69,7 @@ const getMasterSchedule = asyncHandler(async (req, res) => {
     return res.status(200).json({
       master: masterId,
       weeklySchedule: [],
-      message: "Расписание пока не настроено.",
+      message: "Schedule has not been configured yet.",
     });
   }
 
@@ -88,7 +88,7 @@ const addScheduleException = asyncHandler(async (req, res) => {
     masterId.toString() !== req.user._id.toString()
   ) {
     res.status(403);
-    throw new Error("Нет прав на изменение чужого расписания.");
+    throw new Error("No permission to change another master's schedule.");
   }
 
   await checkMasterAccess(masterId, req.user._id, req.user.role).catch(
@@ -103,7 +103,7 @@ const addScheduleException = asyncHandler(async (req, res) => {
   if (!schedule) {
     res.status(404);
     throw new Error(
-      "Расписание мастера не найдено. Сначала настройте недельное расписание."
+      "Master's schedule not found. Configure the weekly schedule first."
     );
   }
 
@@ -117,7 +117,7 @@ const addScheduleException = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: `Исключение для даты ${date} обновлено.`,
+    message: `Exception for date ${date} updated.`,
     schedule,
   });
 });
@@ -142,7 +142,7 @@ const getSalonMastersAndLocation = asyncHandler(async (req, res) => {
 
   if (!salon) {
     res.status(404);
-    throw new Error("Салон не найден.");
+    throw new Error("Salon not found.");
   }
 
   const masters = await User.find({
