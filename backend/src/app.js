@@ -14,6 +14,7 @@ const analyticsRoutes = require("./routes/analytics.routes");
 const planRoutes = require("./routes/plan.routes");
 const telegramRoutes = require("./routes/telegram.routes");
 
+
 connectDB();
 
 const app = express();

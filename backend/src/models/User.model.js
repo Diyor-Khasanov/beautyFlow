@@ -12,7 +12,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    email: String,
+    email: {
+      type: String,
+      required: false,
+    },
     role: {
       type: String,
       enum: ["client", "master", "owner", "admin"],
@@ -29,6 +32,18 @@ const UserSchema = new mongoose.Schema(
     individualEntrepreneurCertificate: {
       type: String,
       trim: true,
+    },
+    telegramId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+    telegramLinkToken: {
+      type: String,
+      sparse: true,
+    },
+    telegramLinkExpires: {
+      type: Date,
     },
 
     rating: {
