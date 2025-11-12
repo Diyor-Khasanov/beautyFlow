@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
-// RTK Query hook'ni chaqiramiz. U avtomatik profilni yuklaydi.
 import { useGetProfileQuery } from "./api/authApi";
 import PrivateRoute from "./components/utils/PrivateRoute";
 import MainLayout from "./components/layout/MainLayout";
@@ -13,15 +12,12 @@ const App = () => {
   const { theme } = useSelector((state) => state.settings);
   const { isLoading } = useSelector((state) => state.auth);
 
-  // App birinchi marta yuklanganda profilni yuklashni boshlash
   useGetProfileQuery();
 
-  // Theme'ni CSS class orqali boshqarish
   React.useEffect(() => {
     document.documentElement.className = theme;
   }, [theme]);
-
-  // Loading Screen (Profilni yuklash paytida)
+  
   if (isLoading) {
     return <LoadingPage />;
   }
