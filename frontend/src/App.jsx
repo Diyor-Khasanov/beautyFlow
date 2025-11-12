@@ -7,6 +7,8 @@ import MainLayout from "./components/layout/MainLayout";
 import LoginPage from "./pages/Auth/LoginPage";
 import DashboardPage from "./pages/Dashboard/DashboardPage";
 import LoadingPage from "./components/feedback/LoadingPage";
+import RegisterPage from './pages/Auth/RegisterPage';
+import VerifyOTPPage from './pages/Auth/VerifyOTPPage';
 
 const App = () => {
   const { theme } = useSelector((state) => state.settings);
@@ -25,39 +27,20 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
-        {/* Register va Verify OTP sahifalarini ham qo'shasiz */}
-
-        {/* Protected Routes */}
-        <Route
-          path="/"
-          element={
-            <PrivateRoute allowedRoles={["owner", "master", "client"]} />
-          }
-        >
-          <Route
-            index
-            element={
-              <MainLayout>
-                <DashboardPage />
-              </MainLayout>
-            }
-          />
-          {/* Boshqa barcha protected sahifalar shu yerga tushadi */}
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/verify-otp" element={<VerifyOTPPage />} />
+        
+        <Route path="/" element={<PrivateRoute allowedRoles={['owner', 'master', 'client']} />}>
+          <Route index element={<MainLayout><DashboardPage /></MainLayout>} />
+          {/* ... Boshqa protected routes... */}
         </Route>
-
-        {/* 404 Xatolik sahifasi */}
-        <Route
-          path="*"
-          element={
-            <MainLayout>
-              <div className="flex justify-center items-center h-[calc(100vh-80px)]">
-                <h1 className="text-4xl text-text-default">404 | Not Found</h1>
-              </div>
-            </MainLayout>
-          }
-        />
+        
+        <Route path="*" element={<MainLayout>
+          <div className="flex justify-center items-center h-[calc(100vh-80px)]">
+            <h1 className="text-4xl text-text-default">404 | Not Found</h1>
+          </div>
+        </MainLayout>} />
       </Routes>
     </Router>
   );
