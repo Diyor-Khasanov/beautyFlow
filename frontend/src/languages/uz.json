@@ -1,0 +1,27 @@
+{
+  "app_name": "BeautyFlow",
+  "login": {
+    "title": "Tizimga kirish",
+    "phone": "Telefon raqami",
+    "password": "Parol",
+    "button": "Kirish",
+    "register_link": "Akkaunt yo'qmi? Ro'yxatdan o'tish"
+  },
+  "dashboard": {
+    "title": "Boshqaruv paneli",
+    "welcome": "Xush kelibsiz"
+  },
+  "roles": {
+    "owner": "Egasi",
+    "master": "Master",
+    "client": "Mijoz"
+  },
+  "nav": {
+    "dashboard": "Boshqaruv",
+    "schedule": "Jadval",
+    "clients": "Mijozlar",
+    "masters": "Masterlar",
+    "analytics": "Tahlil",
+    "logout": "Chiqish"
+  }
+}
