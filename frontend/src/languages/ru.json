@@ -1,0 +1,49 @@
+{
+  "app_name": "BeautyFlow",
+  "login": {
+    "title": "Вход в систему",
+    "phone": "Номер телефона",
+    "password": "Пароль",
+    "button": "Войти",
+    "register_link": "Нет аккаунта? Зарегистрироваться"
+  },
+  "auth": {
+    "verify_title": "Код подтверждения",
+    "verify_message": "Код подтверждения отправлен на номер {phone} через SMS или Telegram. Пожалуйста, введите код.",
+    "otp_code": "Код подтверждения",
+    "verify_button": "Подтвердить и продолжить",
+    "no_code": "Не получили код?",
+    "resend": "Отправить повторно",
+    "register_account": "Регистрация аккаунта",
+    "select_role": "Выберите роль аккаунта"
+  },
+  "feedback": {
+    "loading": "Загрузка...",
+    "error_title": "Произошла ошибка",
+    "no_access": "У вас нет доступа к этой странице.",
+    "success": "Успешно!",
+    "failed": "Операция не удалась."
+  },
+  "nav": {
+    "dashboard": "Панель управления",
+    "schedule": "Расписание",
+    "clients": "Клиенты",
+    "masters": "Мастера",
+    "analytics": "Аналитика",
+    "logout": "Выход",
+    "register": "Регистрация"
+  },
+  "roles": {
+    "owner": "Владелец",
+    "master": "Мастер",
+    "client": "Клиент"
+  },
+  "dashboard": {
+    "welcome": "Добро пожаловать",
+    "summary": "Сводка за сегодня",
+    "total_appointments": "Всего записей",
+    "new_clients": "Новые клиенты",
+    "revenue": "Доход (UZS)",
+    "view_schedule": "Посмотреть расписание"
+  }
+}

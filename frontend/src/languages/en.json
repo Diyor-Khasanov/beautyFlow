@@ -1,0 +1,49 @@
+{
+  "app_name": "BeautyFlow",
+  "login": {
+    "title": "Sign In",
+    "phone": "Phone Number",
+    "password": "Password",
+    "button": "Login",
+    "register_link": "Don't have an account? Register"
+  },
+  "auth": {
+    "verify_title": "Verification Code",
+    "verify_message": "A verification code has been sent to {phone} via SMS or Telegram. Please enter the code.",
+    "otp_code": "Verification Code",
+    "verify_button": "Verify & Continue",
+    "no_code": "Didn't receive a code?",
+    "resend": "Resend Code",
+    "register_account": "Register Account",
+    "select_role": "Select Account Role"
+  },
+  "feedback": {
+    "loading": "Loading...",
+    "error_title": "An Error Occurred",
+    "no_access": "You do not have permission to access this page.",
+    "success": "Success!",
+    "failed": "Operation failed."
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "schedule": "Schedule",
+    "clients": "Clients",
+    "masters": "Masters",
+    "analytics": "Analytics",
+    "logout": "Logout",
+    "register": "Register"
+  },
+  "roles": {
+    "owner": "Owner",
+    "master": "Master",
+    "client": "Client"
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "summary": "Today's Summary",
+    "total_appointments": "Total Appointments",
+    "new_clients": "New Clients",
+    "revenue": "Revenue (UZS)",
+    "view_schedule": "View Schedule"
+  }
+}
