@@ -7,14 +7,10 @@
     "button": "Kirish",
     "register_link": "Akkaunt yo'qmi? Ro'yxatdan o'tish"
   },
-  "dashboard": {
-    "title": "Boshqaruv paneli",
-    "welcome": "Xush kelibsiz"
-  },
-  "roles": {
-    "owner": "Egasi",
-    "master": "Master",
-    "client": "Mijoz"
+  "feedback": {
+    "loading": "Yuklanmoqda...",
+    "error_title": "Xatolik yuz berdi",
+    "no_access": "Ushbu sahifaga kirishga ruxsatingiz yo'q."
   },
   "nav": {
     "dashboard": "Boshqaruv",

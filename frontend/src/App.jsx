@@ -1,27 +1,37 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
+// RTK Query hook'ni chaqiramiz. U avtomatik profilni yuklaydi.
+import { useGetProfileQuery } from "./api/authApi";
 import PrivateRoute from "./components/utils/PrivateRoute";
 import MainLayout from "./components/layout/MainLayout";
 import LoginPage from "./pages/Auth/LoginPage";
 import DashboardPage from "./pages/Dashboard/DashboardPage";
-// ... boshqa sahifalarni shu yerga import qilasiz
+import LoadingPage from "./components/feedback/LoadingPage";
 
-// Redux orqali til va tema yuklanadi
 const App = () => {
   const { theme } = useSelector((state) => state.settings);
+  const { isLoading } = useSelector((state) => state.auth);
 
-  // Theme'ni butun <html> elementiga dinamik qo'yish
+  // App birinchi marta yuklanganda profilni yuklashni boshlash
+  useGetProfileQuery();
+
+  // Theme'ni CSS class orqali boshqarish
   React.useEffect(() => {
     document.documentElement.className = theme;
   }, [theme]);
+
+  // Loading Screen (Profilni yuklash paytida)
+  if (isLoading) {
+    return <LoadingPage />;
+  }
 
   return (
     <Router>
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
-        {/* ... RegisterPage, VerifyOTPPage */}
+        {/* Register va Verify OTP sahifalarini ham qo'shasiz */}
 
         {/* Protected Routes */}
         <Route
@@ -38,9 +48,10 @@ const App = () => {
               </MainLayout>
             }
           />
-          {/* ... Boshqa Protected Routes */}
+          {/* Boshqa barcha protected sahifalar shu yerga tushadi */}
         </Route>
 
+        {/* 404 Xatolik sahifasi */}
         <Route
           path="*"
           element={

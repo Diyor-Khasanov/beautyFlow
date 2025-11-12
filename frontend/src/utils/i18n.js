@@ -4,13 +4,7 @@ import ru from "../languages/ru.json";
 
 const translations = { uz, en, ru };
 
-/**
- * Tarjima kalitini topish funksiyasi
- * @param {string} key
- * @param {string} lang
- * @returns {string}
- */
-export const translate = (key, lang) => {
+export const t = (key, lang) => {
   const langData = translations[lang] || translations["uz"];
   const keys = key.split(".");
 
@@ -19,7 +13,8 @@ export const translate = (key, lang) => {
     if (result && typeof result === "object" && result[k]) {
       result = result[k];
     } else {
-      return `TPL_MISSING[${key}]`;
+      console.warn(`Missing translation key: ${key} for language ${lang}`);
+      return key;
     }
   }
   return result;
